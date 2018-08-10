@@ -9,10 +9,15 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -51,6 +56,7 @@ public class NoteServiceTest {
         notes.add(n3);
 
         when(noteRepositoryMock.findAll()).thenReturn(notes);
+        when(noteRepositoryMock.findById(2L)).thenReturn(Optional.ofNullable(n2));
 
         noteService = new NoteService();
         noteService.setNoteRepository(noteRepositoryMock);
@@ -142,4 +148,79 @@ public class NoteServiceTest {
 
     }
 
+    @Test
+    public void shouldCallRepositorySave()
+    {
+        //Arrange --> declarado en el before.
+
+        //Act
+        noteService.cloneNote(1l);
+
+        //Assert
+        verify(noteRepositoryMock.save(any(Note.class)));
+    }
+
+    @Test
+    public void shouldNoteCloneNoteOne()
+    {
+        noteService.cloneNote(1L);
+
+        Note note = new Note();
+        note.setId(4L);
+        note.setTitle(n1.getTitle());
+        note.setContent(n1.getContent());
+
+        verify(noteRepositoryMock.save(eq(note)));
+    }
+
+    public void shouldNoteCloneNoteTwo()
+    {
+        noteService.cloneNote(1L);
+
+        Note note = new Note();
+        note.setId(4L);
+        note.setTitle(n2.getTitle());
+        note.setContent(n2.getContent());
+
+        verify(noteRepositoryMock.save(eq(note)));
+    }
+
+    @Test
+    public void testCloneVerificarLlamado()
+    {
+        //Arrange
+       /* NoteService servicio = mock(NoteService.class);
+
+        //Act
+        servicio.cloneNote((long) 1);
+
+        //Assert
+        verify(servicio)*/
+
+        //Arrange
+        /*long id = 999;
+        NoteService servicio = mock(NoteService.class);*/
+
+        /*
+        Note notaBuscada = new Note();
+        notaBuscada.setId(id);
+
+        Note notaResultante = new Note();
+
+        when(servicio.findOne(id)).thenReturn(Optional.ofNullable(notaResultante));*/
+
+        //Act
+/*        servicio.cloneNote(id); // Se clona el objeto.
+
+        List<Note> listadoNota = notes;
+        when(servicio.findAll()).thenReturn(listadoNota);
+        */
+        /*if (notaResultante.getId() > 0)
+            servicio.cloneNote(notaResultante.getId());
+        else
+            throw Exception "No existe el registro a clonar.";*/
+
+        //Assert
+        //        assertEquals(notes.size() + 1, listadoNota.size());
+    }
 }
